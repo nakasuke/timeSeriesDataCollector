@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plant Data Prototype</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">PLANT DATA PROTOTYPE</p>
+      <h1 id="app-title">表示アプリ</h1>
+    </div>
+    <nav>
+      <a href="/apps/display-app-1">App 1</a>
+      <a href="/apps/display-app-2">App 2</a>
+      <a href="/apps/display-app-3">App 3</a>
+      <a href="/docs">API</a>
+    </nav>
+  </header>
+  <main>
+    <section class="summary">
+      <div><span>対象信号</span><strong id="signal-count">-</strong></div>
+      <div><span>共通有効期間</span><strong id="range-count">-</strong></div>
+      <div><span>選択期間</span><strong id="selected-range">-</strong></div>
+    </section>
+    <section class="panel">
+      <div class="panel-header">
+        <div><p class="eyebrow">AVAILABLE RANGE</p><h2>表示可能範囲</h2></div>
+        <select id="range-select" aria-label="表示可能範囲"></select>
+        <button id="load-button">データを表示</button>
+      </div>
+      <p id="message" role="status">読み込み中…</p>
+    </section>
+    <section class="panel">
+      <div class="panel-header"><div><p class="eyebrow">TREND</p><h2>信号トレンド</h2></div></div>
+      <div id="charts" class="charts"></div>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
+

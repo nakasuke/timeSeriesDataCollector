@@ -1,0 +1,36 @@
+host: 0.0.0.0
+port: 8182
+evaluationTimeout: 30000
+channelizer: org.apache.tinkerpop.gremlin.server.channel.WebSocketChannelizer
+graphs:
+  graph: conf/tinkergraph.properties
+scriptEngines:
+  gremlin-groovy:
+    plugins:
+      org.apache.tinkerpop.gremlin.server.jsr223.GremlinServerGremlinPlugin: {}
+      org.apache.tinkerpop.gremlin.tinkergraph.jsr223.TinkerGraphGremlinPlugin: {}
+serializers:
+  - className: org.apache.tinkerpop.gremlin.util.ser.GraphBinaryMessageSerializerV1
+    config:
+      serializeResultToString: false
+  - className: org.apache.tinkerpop.gremlin.util.ser.GraphSONMessageSerializerV3
+    config:
+      ioRegistries:
+        - org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistryV3
+processors:
+  - className: org.apache.tinkerpop.gremlin.server.op.session.SessionOpProcessor
+    config:
+      sessionTimeout: 28800000
+  - className: org.apache.tinkerpop.gremlin.server.op.traversal.TraversalOpProcessor
+    config:
+      cacheExpirationTime: 600000
+      cacheMaxSize: 1000
+metrics:
+  consoleReporter:
+    enabled: false
+  csvReporter:
+    enabled: false
+  jmxReporter:
+    enabled: false
+  slf4jReporter:
+    enabled: false
