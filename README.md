@@ -25,6 +25,9 @@ docker compose up --build
 - Gremlin Server：`ws://localhost:8182/gremlin`
 - PostgreSQL：`localhost:5432`
 
+## 起動シーケンス
+![起動シーケンス](./images/sequence.png)
+
 ## 初期データ
 
 | 種別 | 信号数 | 保存率 | テーブル |
