@@ -22,11 +22,6 @@ services:
       - "8182:8182"
     volumes:
       - gremlin-data:/opt/gremlin-server/data
-    healthcheck:
-      test: ["CMD", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8182'"]
-      interval: 5s
-      timeout: 3s
-      retries: 30
 
   api:
     build: ./api
@@ -41,7 +36,7 @@ services:
       postgres:
         condition: service_healthy
       gremlin:
-        condition: service_healthy
+        condition: service_started
 
 volumes:
   postgres-data:

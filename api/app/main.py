@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
@@ -20,15 +21,35 @@ STATIC_DIR = Path(__file__).parent / "static"
 ALLOWED_TABLES = {"ai_mhr", "ao_mhr", "di_mhr", "do_mhr"}
 
 
-@asynccontextmanager
-async def lifespan(_: FastAPI):
+def _startup() -> None:
+    """Run blocking database drivers outside uvicorn's event-loop thread."""
     open_pool()
-    graph.connect_with_retry()
-    seed_postgres()
-    seed_graph()
-    yield
+    try:
+        graph.connect_with_retry()
+        seed_postgres()
+        seed_graph()
+    except Exception:
+        graph.close()
+        close_pool()
+        raise
+
+
+def _shutdown() -> None:
     graph.close()
     close_pool()
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    # gremlin-python's synchronous Client owns an aiohttp event loop. Calling
+    # it directly inside FastAPI/uvloop raises "Cannot run the event loop while
+    # another loop is running", so all blocking startup/shutdown work runs in
+    # a worker thread.
+    await asyncio.to_thread(_startup)
+    try:
+        yield
+    finally:
+        await asyncio.to_thread(_shutdown)
 
 
 app = FastAPI(title="Plant Data Prototype API", version="0.1.0", lifespan=lifespan)
@@ -146,4 +167,3 @@ def query_data(request: DataQueryRequest):
                 ]
                 series.append({"signal_id": signal_id, "points": points})
     return {"series": series}
-

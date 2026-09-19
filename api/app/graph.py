@@ -14,6 +14,7 @@ def connect_with_retry(attempts: int = 30) -> None:
     global _client
     last_error: Exception | None = None
     for _ in range(attempts):
+        candidate: Client | None = None
         try:
             candidate = Client(GREMLIN_URL, "g")
             candidate.submit("g.V().limit(1).count()").all().result()
@@ -21,6 +22,8 @@ def connect_with_retry(attempts: int = 30) -> None:
             return
         except Exception as error:
             last_error = error
+            if candidate is not None:
+                candidate.close()
             time.sleep(2)
     raise RuntimeError("Gremlin Server is not available") from last_error
 

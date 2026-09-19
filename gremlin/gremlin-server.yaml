@@ -9,6 +9,9 @@ scriptEngines:
     plugins:
       org.apache.tinkerpop.gremlin.server.jsr223.GremlinServerGremlinPlugin: {}
       org.apache.tinkerpop.gremlin.tinkergraph.jsr223.TinkerGraphGremlinPlugin: {}
+      org.apache.tinkerpop.gremlin.jsr223.ScriptFileGremlinPlugin:
+        files:
+          - scripts/prototype-init.groovy
 serializers:
   - className: org.apache.tinkerpop.gremlin.util.ser.GraphBinaryMessageSerializerV1
     config:
